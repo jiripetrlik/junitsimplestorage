@@ -1,11 +1,9 @@
 from junit_simple_storage.database import JunitDatabase, JunitTestRun
 from sqlalchemy import create_engine, inspect
-import os.path
+from sqlalchemy.orm import sessionmaker
+import datetime
 
-def test_create_schema(tmpdir):
-    sqlLiteFile = tmpdir.join("test_database.db")
-    sqlLiteFilePath = os.path.abspath(sqlLiteFile)
-    connectionString = "sqlite:///" + sqlLiteFilePath
+def test_create_schema(connectionString):
     database = JunitDatabase(connectionString)
     database.connect()
     database.createSchema()
@@ -17,3 +15,28 @@ def test_create_schema(tmpdir):
     for tableName in expectedTables:
         assert tableName in inspector.get_table_names()
     engine.dispose()
+
+def test_add_test_run(connectionString):
+    database = JunitDatabase(connectionString)
+    database.connect()
+    database.createSchema()
+
+    testRun = JunitTestRun()
+    testRun.id = 5
+    testRun.testSuiteName = "Test suite 1"
+    testRun.timestamp = datetime.datetime.strptime("2019-01-01 12:04:05", '%Y-%m-%d %H:%M:%S')
+    testRun.hostname = "host 1"
+    testRun.name = "Test run 1"
+    testRun.classname = "Class 1"
+    testRun.file = "/file1.txt"
+    testRun.state = "passed"
+    database.insertTestRun(testRun)
+    database.dispose()
+
+    database.connect()
+    engine = database.getEngine()
+    Session = sessionmaker(bind = engine)
+    session = Session()
+    items = session.query(JunitTestRun).count()
+    assert items == 1
+    database.dispose()
