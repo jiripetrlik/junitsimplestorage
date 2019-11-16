@@ -1,0 +1,19 @@
+swagger: "2.0"
+info:
+  description: Swagger file for Junit Simple Storage
+  version: "1.0.0"
+  title: Junit Simple Storage REST API
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+basePath: "/api"
+paths:
+  /health:
+    get:
+      operationId: "junit_simple_storage.rest.health"
+      summary: "Health endpoint for readiness and health probes"
+      description: "Return 200 if application is running"
+      responses:
+        200:
+          description: "Application is healthy and running"
