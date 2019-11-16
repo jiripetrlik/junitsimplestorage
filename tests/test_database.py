@@ -49,3 +49,12 @@ def test_save_test_runs(connectionString):
 
     testRuns = loadJunitTestRuns("tests/junit-report-example.xml")
     database.insertTestRuns(testRuns)
+
+def test_save_test_runs_with_labels(connectionString):
+    database = JunitDatabase(connectionString)
+    database.connect()
+    database.createSchema()
+
+    labels = { "key1" : "value1", "key2" : "value2" }
+    testRuns = loadJunitTestRuns("tests/junit-report-example.xml")
+    database.insertTestRuns(testRuns, labels)

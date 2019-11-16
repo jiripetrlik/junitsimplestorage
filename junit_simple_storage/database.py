@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Numeric, String, DateTime
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Numeric, String, DateTime, ForeignKey
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -18,18 +18,34 @@ class JunitDatabase:
     def createSchema(self):
         Base.metadata.create_all(self.engine)
 
-    def insertTestRun(self, testRun):
+    def insertTestRun(self, testRun, labels = {}):
         Session = sessionmaker(bind = self.engine)
         session = Session()
         session.add(testRun)
+        session.flush()
+
+        for key in labels:
+            label = Label(
+                testRun = testRun.id,
+                key = key,
+                value = labels[key])
+
         session.commit()
 
-    def insertTestRuns(self, testRuns):
+    def insertTestRuns(self, testRuns, labels = {}):
         Session = sessionmaker(bind = self.engine)
         session = Session()
 
+        session.add_all(testRuns)
+        session.flush()
+
         for testRun in testRuns:
-            session.add(testRun)
+            for key in labels:
+                label = Label(
+                    testRun = testRun.id,
+                    key = key,
+                    value = labels[key])
+                session.add(label)
 
         session.commit()
 
@@ -48,3 +64,11 @@ class JunitTestRun(Base):
     time = Column(Numeric)
     state = Column(String)
     message = Column(String)
+
+class Label(Base):
+    __tablename__ = "label"
+
+    id = Column(Integer, primary_key=True)
+    testRun = Column(Integer, ForeignKey('test_run.id'), nullable=False)
+    key = Column(String, nullable=False)
+    value = Column(String, nullable=False)
