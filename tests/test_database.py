@@ -1,4 +1,4 @@
-from junit_simple_storage.database import JunitDatabase, JunitTestRun
+from junit_simple_storage.database import JunitDatabase, JunitTestRun, Label
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -38,8 +38,8 @@ def test_add_test_run(connectionString):
     engine = database.getEngine()
     Session = sessionmaker(bind = engine)
     session = Session()
-    items = session.query(JunitTestRun).count()
-    assert items == 1
+    numberOfTestRuns = session.query(JunitTestRun).count()
+    assert numberOfTestRuns == 1
     database.dispose()
 
 def test_save_test_runs(connectionString):
@@ -50,6 +50,14 @@ def test_save_test_runs(connectionString):
     testRuns = loadJunitTestRuns("tests/junit-report-example.xml")
     database.insertTestRuns(testRuns)
 
+    database.connect()
+    engine = database.getEngine()
+    Session = sessionmaker(bind = engine)
+    session = Session()
+    numberOfTestRuns = session.query(JunitTestRun).count()
+    assert numberOfTestRuns > 0
+    database.dispose()
+
 def test_save_test_runs_with_labels(connectionString):
     database = JunitDatabase(connectionString)
     database.connect()
@@ -58,3 +66,13 @@ def test_save_test_runs_with_labels(connectionString):
     labels = { "key1" : "value1", "key2" : "value2" }
     testRuns = loadJunitTestRuns("tests/junit-report-example.xml")
     database.insertTestRuns(testRuns, labels)
+
+    database.connect()
+    engine = database.getEngine()
+    Session = sessionmaker(bind = engine)
+    session = Session()
+    numberOfTestRuns = session.query(JunitTestRun).count()
+    assert numberOfTestRuns > 0
+    numberOfLabels = session.query(Label).count()
+    assert numberOfLabels > 0
+    database.dispose()
