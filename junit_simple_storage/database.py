@@ -4,6 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class JunitDatabase:
     def __init__(self, connectionString):
         self.engine = create_engine(connectionString, echo = True)
@@ -23,6 +24,15 @@ class JunitDatabase:
         session.add(testRun)
         session.commit()
 
+    def insertTestRuns(self, testRuns):
+        Session = sessionmaker(bind = self.engine)
+        session = Session()
+
+        for testRun in testRuns:
+            session.add(testRun)
+
+        session.commit()
+
     def getEngine(self):
         return self.engine
 
@@ -35,9 +45,6 @@ class JunitTestRun(Base):
     hostname = Column(String)
     name = Column(String)
     classname = Column(String)
-    file = Column(String)
-    line = Column(Integer)
     time = Column(Numeric)
     state = Column(String)
-    failureMessage = Column(String)
-    errorMessage = Column(String)
+    message = Column(String)

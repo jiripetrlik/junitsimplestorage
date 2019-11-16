@@ -2,6 +2,7 @@ from junit_simple_storage.database import JunitDatabase, JunitTestRun
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
 import datetime
+from junit_simple_storage.junit import loadJunitTestRuns
 
 def test_create_schema(connectionString):
     database = JunitDatabase(connectionString)
@@ -40,3 +41,11 @@ def test_add_test_run(connectionString):
     items = session.query(JunitTestRun).count()
     assert items == 1
     database.dispose()
+
+def test_save_test_runs(connectionString):
+    database = JunitDatabase(connectionString)
+    database.connect()
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns("tests/junit-report-example.xml")
+    database.insertTestRuns(testRuns)
