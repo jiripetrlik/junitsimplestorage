@@ -4,17 +4,10 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-
 class JunitDatabase:
-    def __init__(self, connectionString):
-        self.engine = create_engine(connectionString, echo = True)
+    def __init__(self, engine):
+        self.engine = engine
     
-    def connect(self):
-        self.engine.connect()
-
-    def dispose(self):
-        self.engine.dispose()
-
     def createSchema(self):
         Base.metadata.create_all(self.engine)
 

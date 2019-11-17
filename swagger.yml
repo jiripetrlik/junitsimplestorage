@@ -9,9 +9,24 @@ produces:
   - "application/json"
 basePath: "/api"
 paths:
+  /import:
+    post:
+      operationId: "rest.import_junit"
+      summary: "Import JUnit file to database"
+      consumes:
+        - "application/xml"
+      parameters:
+        - name: junit
+          in: body
+          required: True
+          schema:
+            type: string
+      responses:
+        201:
+          description: "Successfully imported"
   /health:
     get:
-      operationId: "junit_simple_storage.rest.health"
+      operationId: "rest.health"
       summary: "Health endpoint for readiness and health probes"
       description: "Return 200 if application is running"
       responses:

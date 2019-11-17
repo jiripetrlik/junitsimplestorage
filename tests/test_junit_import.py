@@ -1,5 +1,5 @@
-from junit_simple_storage.junit import loadJunitTestRuns
+from junit import loadJunitTestRuns
 
-def test_import():
-    testRuns = loadJunitTestRuns("tests/junit-report-example.xml")
+def test_import(exampleJunitString):
+    testRuns = loadJunitTestRuns(exampleJunitString)
     assert len(testRuns) > 0

@@ -1,11 +1,11 @@
 from junitparser import JUnitXml
-from junit_simple_storage.database import JunitTestRun
+from database import JunitTestRun
 import datetime
 
 TEST_STATUS_PASSED = "passed"
 
-def loadJunitTestRuns(junitFile):
-    xml = JUnitXml.fromfile("tests/junit-report-example.xml")
+def loadJunitTestRuns(junitString):
+    xml = JUnitXml.fromstring(junitString)
     testCasesList = []
     for testSuite in xml:
         for item in testSuite:

@@ -1,14 +1,15 @@
-from junit_simple_storage.database import JunitDatabase, JunitTestRun, Label
+from database import JunitDatabase, JunitTestRun, Label
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
 import datetime
-from junit_simple_storage.junit import loadJunitTestRuns
+from junit import loadJunitTestRuns
 
 def test_create_schema(connectionString):
-    database = JunitDatabase(connectionString)
-    database.connect()
+    engine = create_engine(connectionString)
+    engine.connect()
+    database = JunitDatabase(engine)
     database.createSchema()
-    database.dispose()
+    engine.dispose()
 
     expectedTables = ["test_run"]
     engine = create_engine(connectionString)
@@ -18,8 +19,9 @@ def test_create_schema(connectionString):
     engine.dispose()
 
 def test_add_test_run(connectionString):
-    database = JunitDatabase(connectionString)
-    database.connect()
+    engine = create_engine(connectionString)
+    engine.connect()
+    database = JunitDatabase(engine)
     database.createSchema()
 
     testRun = JunitTestRun()
@@ -32,42 +34,47 @@ def test_add_test_run(connectionString):
     testRun.file = "/file1.txt"
     testRun.state = "passed"
     database.insertTestRun(testRun)
-    database.dispose()
+    engine.dispose()
 
-    database.connect()
+    engine = create_engine(connectionString)
+    engine.connect()
     engine = database.getEngine()
     Session = sessionmaker(bind = engine)
     session = Session()
     numberOfTestRuns = session.query(JunitTestRun).count()
     assert numberOfTestRuns == 1
-    database.dispose()
+    engine.dispose()
 
-def test_save_test_runs(connectionString):
-    database = JunitDatabase(connectionString)
-    database.connect()
+def test_save_test_runs(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    database = JunitDatabase(engine)
     database.createSchema()
 
-    testRuns = loadJunitTestRuns("tests/junit-report-example.xml")
+    testRuns = loadJunitTestRuns(exampleJunitString)
     database.insertTestRuns(testRuns)
+    engine.dispose()
 
-    database.connect()
-    engine = database.getEngine()
+    engine = create_engine(connectionString)
     Session = sessionmaker(bind = engine)
     session = Session()
     numberOfTestRuns = session.query(JunitTestRun).count()
     assert numberOfTestRuns > 0
-    database.dispose()
+    engine.dispose()
 
-def test_save_test_runs_with_labels(connectionString):
-    database = JunitDatabase(connectionString)
-    database.connect()
+def test_save_test_runs_with_labels(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    database = JunitDatabase(engine)
     database.createSchema()
 
     labels = { "key1" : "value1", "key2" : "value2" }
-    testRuns = loadJunitTestRuns("tests/junit-report-example.xml")
+    testRuns = loadJunitTestRuns(exampleJunitString)
     database.insertTestRuns(testRuns, labels)
+    engine.dispose()
 
-    database.connect()
+    engine = create_engine(connectionString)
+    engine.connect()
     engine = database.getEngine()
     Session = sessionmaker(bind = engine)
     session = Session()
@@ -75,4 +82,4 @@ def test_save_test_runs_with_labels(connectionString):
     assert numberOfTestRuns > 0
     numberOfLabels = session.query(Label).count()
     assert numberOfLabels > 0
-    database.dispose()
+    engine.dispose()
