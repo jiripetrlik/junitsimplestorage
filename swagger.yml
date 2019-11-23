@@ -9,6 +9,24 @@ produces:
   - "application/json"
 basePath: "/api"
 paths:
+  /:
+    get:
+      operationId: "rest.get"
+      summary: "Get test runs"
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          required: false
+          description: "Page number"
+        - name: "items"
+          in: query
+          type: integer
+          required: false
+          description: "Items per page"
+      responses:
+        200:
+          description: "List of test runs was returned"
   /import:
     post:
       operationId: "rest.import_junit"

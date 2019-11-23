@@ -11,6 +11,13 @@ class JunitDatabase:
     def createSchema(self):
         Base.metadata.create_all(self.engine)
 
+    def getTestRuns(self, page, items):
+        Session = sessionmaker(bind = self.engine)
+        session = Session()
+
+        result = session.query(JunitTestRun).order_by("id").offset((page - 1) * items).limit(items).all()
+        return result
+
     def insertTestRun(self, testRun, labels = {}):
         Session = sessionmaker(bind = self.engine)
         session = Session()
@@ -61,6 +68,9 @@ class JunitTestRun(Base):
     time = Column(Numeric)
     state = Column(String)
     message = Column(String)
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class Label(Base):
     __tablename__ = "label"

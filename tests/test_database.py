@@ -45,6 +45,26 @@ def test_add_test_run(connectionString):
     assert numberOfTestRuns == 1
     engine.dispose()
 
+def test_get_test_run(connectionString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    database = JunitDatabase(engine)
+    database.createSchema()
+
+    testRun = JunitTestRun()
+    testRun.id = 5
+    testRun.testSuiteName = "Test suite 1"
+    testRun.timestamp = datetime.datetime.strptime("2019-01-01 12:04:05", '%Y-%m-%d %H:%M:%S')
+    testRun.hostname = "host 1"
+    testRun.name = "Test run 1"
+    testRun.classname = "Class 1"
+    testRun.file = "/file1.txt"
+    testRun.state = "passed"
+    database.insertTestRun(testRun)
+
+    items = database.getTestRuns(1, 100)
+    assert len(items) == 1
+
 def test_save_test_runs(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()
