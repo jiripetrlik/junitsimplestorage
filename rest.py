@@ -4,8 +4,13 @@ junitDatabase = None
 
 def import_junit(junit):
     testRuns = loadJunitTestRuns(junit)
-    junitDatabase.insertTestRuns(testRuns)
-    return len(testRuns), 201
+    testRunsIds = junitDatabase.insertTestRuns(testRuns)
+
+    result = {
+        "numberOfItems" : len(testRunsIds),
+        "ids" : testRunsIds
+    }
+    return result, 201
 
 def health():
-    return "ok"
+    return "Ready!"

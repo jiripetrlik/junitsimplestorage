@@ -32,7 +32,9 @@ class JunitDatabase:
         session.add_all(testRuns)
         session.flush()
 
+        testRunIds = []
         for testRun in testRuns:
+            testRunIds.append(testRun.id)
             for key in labels:
                 label = Label(
                     testRun = testRun.id,
@@ -41,6 +43,8 @@ class JunitDatabase:
                 session.add(label)
 
         session.commit()
+        
+        return testRunIds
 
     def getEngine(self):
         return self.engine
