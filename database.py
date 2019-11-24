@@ -1,6 +1,7 @@
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Numeric, String, DateTime, ForeignKey
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Numeric, String, DateTime, ForeignKey, or_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -52,6 +53,54 @@ class JunitDatabase:
         session.commit()
         
         return testRunIds
+
+    def queryTestRuns(self, q):
+        Session = sessionmaker(bind = self.engine)
+        session = Session()
+
+        query = session.query(JunitTestRun)
+        if ("id" in q) and (len(q["id"]) > 0):
+            conditions = []
+            for id in q["id"]:
+                conditions.append(JunitTestRun.id == id)
+            query = query.filter(or_(*conditions))
+        if ("testSuiteName" in q) and (len(q["testSuiteName"]) > 0):
+            conditions = []
+            for testSuiteName in q["testSuiteName"]:
+                conditions.append(JunitTestRun.testSuiteName == testSuiteName)
+            query = query.filter(or_(*conditions))
+        if ("minTimeDate" in q) and (len(q["minTimeDate"]) > 0):
+            t = datetime.fromisoformat(q["minTimeDate"])
+            query = query.filter(JunitTestRun.timestamp > t)
+        if ("maxTimeDate" in q) and (len(q["maxTimeDate"]) > 0):
+            t = datetime.fromisoformat(q["maxTimeDate"])
+            query = query.filter(JunitTestRun.timestamp < t)
+        if ("hostname" in q) and (len(q["hostname"]) > 0):
+            conditions = []
+            for hostname in q["hostname"]:
+                conditions.append(JunitTestRun.hostname == hostname)
+            query = query.filter(or_(*conditions))
+        if ("name" in q) and (len(q["name"]) > 0):
+            conditions = []
+            for name in q["name"]:
+                conditions.append(JunitTestRun.name == name)
+            query = query.filter(or_(*conditions))
+        if ("classname" in q) and (len(q["classname"]) > 0):
+            conditions = []
+            for classname in q["classname"]:
+                conditions.append(JunitTestRun.classname == classname)
+            query = query.filter(or_(*conditions))
+        if "timeIsLower" in q:
+            query = query.filter(JunitTestRun.time < q["timeIsLower"])
+        if "timeIsHigher" in q:
+            query = query.filter(JunitTestRun.time > q["timeIsHigher"])
+        if ("state" in q) and (len(q["state"]) > 0):
+            conditions = []
+            for state in q["state"]:
+                conditions.append(JunitTestRun.state == state)
+            query = query.filter(or_(*conditions))
+
+        return query.all()
 
     def getEngine(self):
         return self.engine

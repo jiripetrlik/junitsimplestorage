@@ -103,3 +103,48 @@ def test_save_test_runs_with_labels(connectionString, exampleJunitString):
     numberOfLabels = session.query(Label).count()
     assert numberOfLabels > 0
     engine.dispose()
+
+def test_query_by_name(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    database = JunitDatabase(engine)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns)
+
+    testRuns = database.queryTestRuns({"name" : ["test_something1", "test_something3"]})
+    assert len(testRuns) == 2
+
+    engine.dispose()
+
+def test_query_by_time(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    database = JunitDatabase(engine)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns)
+
+    testRuns = database.queryTestRuns({
+        "timeIsLower" : 2.5,
+        "timeIsHigher" : 1.0
+        })
+    assert len(testRuns) == 1
+    assert testRuns[0].name == "test_something2"
+
+def test_query_by_timestamp(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    database = JunitDatabase(engine)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns)
+    
+    testRuns = database.queryTestRuns({
+        "minTimeDate" : "2019-11-01 10:00:00",
+        "maxTimeDate" : "2019-11-30 20:15:05"
+        })
+    assert len(testRuns) == 4
