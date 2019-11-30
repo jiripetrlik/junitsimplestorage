@@ -36,6 +36,9 @@ paths:
       consumes:
         - "application/xml"
       parameters:
+        - name: labels
+          in: query
+          type: string
         - name: junit
           in: body
           required: True

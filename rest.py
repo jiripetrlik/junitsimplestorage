@@ -17,9 +17,14 @@ def get(page = None, items = None):
 
     return testRuns
 
-def import_junit(junit):
+def import_junit(labels, junit):
+    labelsDictionary = {}
+
+    if (labels is not None) and (len(labels) > 0):
+        labelsDictionary = __parseLabels(labels)
+
     testRuns = loadJunitTestRuns(junit)
-    testRunsIds = junitDatabase.insertTestRuns(testRuns)
+    testRunsIds = junitDatabase.insertTestRuns(testRuns, labelsDictionary)
 
     result = {
         "numberOfItems" : len(testRunsIds),
@@ -42,3 +47,19 @@ def query(query):
 
 def health():
     return "Ready!"
+
+def __parseLabels(str):
+    labels = {}
+
+    if len(str) == 0:
+        return labels
+
+    labelPairs = str.split(",")
+    for pair in labelPairs:
+        pairSplitted = pair.split(":", 1)
+        key = pairSplitted[0]
+        value = pairSplitted[1]
+
+        labels[key] = value
+
+    return labels
