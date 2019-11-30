@@ -1,13 +1,14 @@
 from database import JunitDatabase, JunitTestRun, Label
 from sqlalchemy import create_engine, inspect
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 import datetime
 from junit import loadJunitTestRuns
 
 def test_create_schema(connectionString):
     engine = create_engine(connectionString)
     engine.connect()
-    database = JunitDatabase(engine)
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
     database.createSchema()
     engine.dispose()
 
@@ -21,7 +22,8 @@ def test_create_schema(connectionString):
 def test_add_test_run(connectionString):
     engine = create_engine(connectionString)
     engine.connect()
-    database = JunitDatabase(engine)
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
     database.createSchema()
 
     testRun = JunitTestRun()
@@ -48,7 +50,8 @@ def test_add_test_run(connectionString):
 def test_get_test_run(connectionString):
     engine = create_engine(connectionString)
     engine.connect()
-    database = JunitDatabase(engine)
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
     database.createSchema()
 
     testRun = JunitTestRun()
@@ -68,7 +71,8 @@ def test_get_test_run(connectionString):
 def test_save_test_runs(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()
-    database = JunitDatabase(engine)
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
     database.createSchema()
 
     testRuns = loadJunitTestRuns(exampleJunitString)
@@ -85,7 +89,8 @@ def test_save_test_runs(connectionString, exampleJunitString):
 def test_save_test_runs_with_labels(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()
-    database = JunitDatabase(engine)
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
     database.createSchema()
 
     labels = { "key1" : "value1", "key2" : "value2" }
@@ -107,7 +112,8 @@ def test_save_test_runs_with_labels(connectionString, exampleJunitString):
 def test_query_by_name(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()
-    database = JunitDatabase(engine)
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
     database.createSchema()
 
     testRuns = loadJunitTestRuns(exampleJunitString)
@@ -121,7 +127,8 @@ def test_query_by_name(connectionString, exampleJunitString):
 def test_query_by_time(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()
-    database = JunitDatabase(engine)
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
     database.createSchema()
 
     testRuns = loadJunitTestRuns(exampleJunitString)
@@ -137,7 +144,8 @@ def test_query_by_time(connectionString, exampleJunitString):
 def test_query_by_timestamp(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()
-    database = JunitDatabase(engine)
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
     database.createSchema()
 
     testRuns = loadJunitTestRuns(exampleJunitString)
@@ -148,3 +156,9 @@ def test_query_by_timestamp(connectionString, exampleJunitString):
         "maxTimeDate" : "2019-11-30 20:15:05"
         })
     assert len(testRuns) == 4
+
+def __scopedSession(engine):
+    sessionFactory = sessionmaker(bind=engine)
+    scopedSession = scoped_session(sessionFactory)
+
+    return scopedSession

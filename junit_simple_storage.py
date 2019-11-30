@@ -8,7 +8,7 @@ import rest
 app = connexion.App(__name__, specification_dir='./')
 app.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app.app)
-rest.junitDatabase = JunitDatabase(db.engine)
+rest.junitDatabase = JunitDatabase(db.engine, db.session)
 rest.junitDatabase.createSchema()
 app.add_api('swagger.yml')
 

@@ -6,24 +6,20 @@ from datetime import datetime
 Base = declarative_base()
 
 class JunitDatabase:
-    def __init__(self, engine):
+    def __init__(self, engine, scopedSession):
         self.engine = engine
+        self.scopedSession = scopedSession
     
     def createSchema(self):
         Base.metadata.create_all(self.engine)
 
     def getTestRuns(self, page, items):
-        Session = sessionmaker(bind = self.engine)
-        session = Session()
-
-        result = session.query(JunitTestRun).order_by("id").offset((page - 1) * items).limit(items).all()
+        result = self.scopedSession.query(JunitTestRun).order_by("id").offset((page - 1) * items).limit(items).all()
         return result
 
     def insertTestRun(self, testRun, labels = {}):
-        Session = sessionmaker(bind = self.engine)
-        session = Session()
-        session.add(testRun)
-        session.flush()
+        self.scopedSession.add(testRun)
+        self.scopedSession.flush()
 
         for key in labels:
             label = Label(
@@ -31,14 +27,11 @@ class JunitDatabase:
                 key = key,
                 value = labels[key])
 
-        session.commit()
+        self.scopedSession.commit()
 
     def insertTestRuns(self, testRuns, labels = {}):
-        Session = sessionmaker(bind = self.engine)
-        session = Session()
-
-        session.add_all(testRuns)
-        session.flush()
+        self.scopedSession.add_all(testRuns)
+        self.scopedSession.flush()
 
         testRunIds = []
         for testRun in testRuns:
@@ -48,17 +41,14 @@ class JunitDatabase:
                     testRun = testRun.id,
                     key = key,
                     value = labels[key])
-                session.add(label)
+                self.scopedSession.add(label)
 
-        session.commit()
+        self.scopedSession.commit()
         
         return testRunIds
 
     def queryTestRuns(self, q):
-        Session = sessionmaker(bind = self.engine)
-        session = Session()
-
-        query = session.query(JunitTestRun)
+        query = self.scopedSession.query(JunitTestRun)
         if ("id" in q) and (len(q["id"]) > 0):
             conditions = []
             for id in q["id"]:
