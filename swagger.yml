@@ -58,6 +58,19 @@ paths:
       responses:
         200:
           description: "List of test runs was returned"
+  /delete/{id}:
+    delete:
+      operationId: "rest.delete"
+      summary: "Delete test run"
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Test run was deleted"
   /health:
     get:
       operationId: "rest.health"

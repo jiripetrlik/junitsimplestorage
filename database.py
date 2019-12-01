@@ -83,6 +83,11 @@ class JunitDatabase:
 
         return query.all()
 
+    def deleteTestRun(self, id):
+        testRun = self.scopedSession.query(JunitTestRun).filter(JunitTestRun.id == id).one()
+        self.scopedSession.delete(testRun)
+        self.scopedSession.commit()
+
     def getEngine(self):
         return self.engine
 
@@ -98,7 +103,7 @@ class JunitTestRun(Base):
     time = Column(Numeric)
     state = Column(String)
     message = Column(String)
-    labels = relationship("Label", back_populates = "testRuns", lazy = "joined")
+    labels = relationship("Label", back_populates = "testRuns", lazy = "joined", cascade = "all, delete, delete-orphan")
 
     def as_dict(self):
         dictionary = {c.name: getattr(self, c.name) for c in self.__table__.columns}

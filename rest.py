@@ -37,6 +37,11 @@ def query(body):
     testRuns = list(map(lambda t : t.as_dict(), testRuns))
     return testRuns
 
+def delete(id):
+    junitDatabase.deleteTestRun(id)
+    
+    return id
+
 def health():
     return "Ready!"
 

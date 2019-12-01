@@ -108,6 +108,32 @@ def test_query_by_timestamp(connectionString, exampleJunitString):
         })
     assert len(testRuns) == 4
 
+def test_delete_test_run(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns, {"label1" : "value1"})
+
+    testRuns = database.getTestRuns(1, 100)
+    testRunIds = []
+    for testRun in testRuns:
+        testRunIds.append(testRun.id)
+    assert 2 in testRunIds
+    assert session.query(Label).filter(Label.testRun == 2).count() > 0
+
+    database.deleteTestRun(2)
+
+    testRuns = database.getTestRuns(1, 100)
+    testRunIds = []
+    for testRun in testRuns:
+        testRunIds.append(testRun.id)
+    assert 2 not in testRunIds
+    assert session.query(Label).filter(Label.testRun == 2).count() == 0
+
 def __scopedSession(engine):
     sessionFactory = sessionmaker(bind=engine)
     scopedSession = scoped_session(sessionFactory)
