@@ -17,13 +17,13 @@ def get(page = None, items = None):
 
     return testRuns
 
-def import_junit(labels, junit):
+def import_junit(labels, body):
     labelsDictionary = {}
 
     if (labels is not None) and (len(labels) > 0):
         labelsDictionary = __parseLabels(labels)
 
-    testRuns = loadJunitTestRuns(junit)
+    testRuns = loadJunitTestRuns(body)
     testRunsIds = junitDatabase.insertTestRuns(testRuns, labelsDictionary)
 
     result = {
@@ -32,16 +32,8 @@ def import_junit(labels, junit):
     }
     return result, 201
 
-def query(query):
-    contentType = connexion.request.headers["Content-Type"]
-    if contentType == "application/json":
-        q = json.loads(query)
-    elif contentType == "application/yaml":
-        q = yaml.loads(query)
-    else:
-        return "Unsupported content type.", 415
-    
-    testRuns = junitDatabase.queryTestRuns(q)
+def query(body):
+    testRuns = junitDatabase.queryTestRuns(body)
     testRuns = list(map(lambda t : t.as_dict(), testRuns))
     return testRuns
 
