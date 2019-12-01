@@ -17,7 +17,7 @@ def get(page = None, items = None):
 
     return testRuns
 
-def import_junit(labels, body):
+def import_junit(body, labels = None):
     labelsDictionary = {}
 
     if (labels is not None) and (len(labels) > 0):

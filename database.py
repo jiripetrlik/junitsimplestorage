@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Numeric, String, DateTime, ForeignKey, or_
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
@@ -14,36 +14,26 @@ class JunitDatabase:
         Base.metadata.create_all(self.engine)
 
     def getTestRuns(self, page, items):
-        result = self.scopedSession.query(JunitTestRun).order_by("id").offset((page - 1) * items).limit(items).all()
+        result = self.scopedSession.query(JunitTestRun).order_by(JunitTestRun.id).offset((page - 1) * items).limit(items).all()
         return result
 
-    def insertTestRun(self, testRun, labels = {}):
-        self.scopedSession.add(testRun)
-        self.scopedSession.flush()
+    def insertTestRuns(self, testRuns, labels = {}):
+        for testRun in testRuns:
+            testRun.labels = []
+            for key in labels:
+                label = Label()
+                label.testRun = testRun
+                label.key = key
+                label.value = labels[key]
 
-        for key in labels:
-            label = Label(
-                testRun = testRun.id,
-                key = key,
-                value = labels[key])
+                testRun.labels.append(label)
+        self.scopedSession.add_all(testRuns)
 
         self.scopedSession.commit()
-
-    def insertTestRuns(self, testRuns, labels = {}):
-        self.scopedSession.add_all(testRuns)
-        self.scopedSession.flush()
 
         testRunIds = []
         for testRun in testRuns:
             testRunIds.append(testRun.id)
-            for key in labels:
-                label = Label(
-                    testRun = testRun.id,
-                    key = key,
-                    value = labels[key])
-                self.scopedSession.add(label)
-
-        self.scopedSession.commit()
         
         return testRunIds
 
@@ -89,6 +79,7 @@ class JunitDatabase:
             for state in q["state"]:
                 conditions.append(JunitTestRun.state == state)
             query = query.filter(or_(*conditions))
+        query.order_by(JunitTestRun.id)
 
         return query.all()
 
@@ -107,9 +98,15 @@ class JunitTestRun(Base):
     time = Column(Numeric)
     state = Column(String)
     message = Column(String)
+    labels = relationship("Label", back_populates = "testRuns", lazy = "joined")
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        dictionary = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        labels = {}
+        for label in self.labels:
+            labels[label.key] = label.value
+        dictionary["labels"] = labels
+        return dictionary
 
 class Label(Base):
     __tablename__ = "label"
@@ -118,3 +115,5 @@ class Label(Base):
     testRun = Column(Integer, ForeignKey('test_run.id'), nullable=False)
     key = Column(String, nullable=False)
     value = Column(String, nullable=False)
+
+    testRuns = relationship("JunitTestRun", back_populates = "labels")
