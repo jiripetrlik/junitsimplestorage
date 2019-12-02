@@ -108,6 +108,36 @@ def test_query_by_timestamp(connectionString, exampleJunitString):
         })
     assert len(testRuns) == 4
 
+def test_query_by_labels(connectionString, exampleJunitString):
+    engine = create_engine(connectionString, echo=True)
+    engine.connect()
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    numberOfTestRuns = len(testRuns)
+    database.insertTestRuns(testRuns)
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns, {"label1" : "value1"})
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns, {"label1" : "value1", "label2" : "value2"})
+
+    testRuns = database.queryTestRuns({
+            "labels" : {
+                "label1" : "value1",
+            }
+        })
+    assert len(testRuns) == 2 * numberOfTestRuns
+    
+    testRuns = database.queryTestRuns({
+            "labels" : {
+                "label1" : "value1",
+                "label2" : "value2",
+            }
+        })
+    assert len(testRuns) == numberOfTestRuns
+
 def test_delete_test_run(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()

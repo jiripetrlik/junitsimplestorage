@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Numeric, String, DateTime, ForeignKey, or_
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Numeric, String, DateTime, ForeignKey, and_, or_, func
+from sqlalchemy.orm import sessionmaker, relationship, lazyload
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
@@ -38,7 +38,40 @@ class JunitDatabase:
         return testRunIds
 
     def queryTestRuns(self, q):
+        if ("labels" in q) and (len(q["labels"]) > 0):
+            return self.__queryTestRunsWithLabels(q)
+        else:
+            return self.__queryTestRunsWithoutLabels(q)
+
+    def __queryTestRunsWithoutLabels(self, q):
         query = self.scopedSession.query(JunitTestRun)
+        
+        query = self.__basicQueryFilter(q, query)
+        query.order_by(JunitTestRun.id)
+
+        return query.all()
+
+    def __queryTestRunsWithLabels(self, q):
+        query = self.scopedSession.query(JunitTestRun.id)
+        conditions = []
+        for label in q["labels"]:
+            conditions.append(and_(Label.key == label, Label.value == q["labels"][label]))
+        query = query.filter(or_(*conditions))
+        query = query.join(Label, JunitTestRun.id == Label.testRun)
+        query = query.group_by(JunitTestRun.id)
+        query = query.having(func.count(JunitTestRun.id) == len(q["labels"]))
+        
+        query = self.__basicQueryFilter(q, query)
+        query.order_by(JunitTestRun.id)
+        testRunIds = query.all()
+        testRunIds = list(map(lambda x : x[0], testRunIds))
+
+        query = self.scopedSession.query(JunitTestRun)
+        query = query.filter(JunitTestRun.id.in_(testRunIds))
+
+        return query.all()
+
+    def __basicQueryFilter(self, q, query):
         if ("id" in q) and (len(q["id"]) > 0):
             conditions = []
             for id in q["id"]:
@@ -79,9 +112,8 @@ class JunitDatabase:
             for state in q["state"]:
                 conditions.append(JunitTestRun.state == state)
             query = query.filter(or_(*conditions))
-        query.order_by(JunitTestRun.id)
 
-        return query.all()
+        return query
 
     def deleteTestRun(self, id):
         testRun = self.scopedSession.query(JunitTestRun).filter(JunitTestRun.id == id).one()
