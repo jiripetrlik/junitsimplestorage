@@ -37,6 +37,19 @@ def test_save_test_runs(connectionString, exampleJunitString):
     assert numberOfTestRuns > 0
     engine.dispose()
 
+def test_number_of_test_runs(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    numberOfTestRuns = len(testRuns)
+    database.insertTestRuns(testRuns)
+
+    assert database.numberOfTestRuns() == numberOfTestRuns
+
 def test_save_test_runs_with_labels(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()

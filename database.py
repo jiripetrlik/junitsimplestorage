@@ -13,6 +13,10 @@ class JunitDatabase:
     def createSchema(self):
         Base.metadata.create_all(self.engine)
 
+    def numberOfTestRuns(self):
+        result = self.scopedSession.query(func.count(JunitTestRun.id)).one()
+        return result[0]
+
     def getTestRuns(self, page, items):
         result = self.scopedSession.query(JunitTestRun).order_by(JunitTestRun.id).offset((page - 1) * items).limit(items).all()
         return result
