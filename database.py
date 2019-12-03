@@ -72,48 +72,30 @@ class JunitDatabase:
         return query.all()
 
     def __basicQueryFilter(self, q, query):
-        if ("id" in q) and (len(q["id"]) > 0):
-            conditions = []
-            for id in q["id"]:
-                conditions.append(JunitTestRun.id == id)
-            query = query.filter(or_(*conditions))
-        if ("testSuiteName" in q) and (len(q["testSuiteName"]) > 0):
-            conditions = []
-            for testSuiteName in q["testSuiteName"]:
-                conditions.append(JunitTestRun.testSuiteName == testSuiteName)
-            query = query.filter(or_(*conditions))
+        query = self.__filterListInQuery(q, "id", JunitTestRun.id, query)
+        query = self.__filterListInQuery(q, "testSuiteName", JunitTestRun.testSuiteName, query)
         if ("minTimeDate" in q) and (len(q["minTimeDate"]) > 0):
             t = datetime.fromisoformat(q["minTimeDate"])
             query = query.filter(JunitTestRun.timestamp > t)
         if ("maxTimeDate" in q) and (len(q["maxTimeDate"]) > 0):
             t = datetime.fromisoformat(q["maxTimeDate"])
             query = query.filter(JunitTestRun.timestamp < t)
-        if ("hostname" in q) and (len(q["hostname"]) > 0):
-            conditions = []
-            for hostname in q["hostname"]:
-                conditions.append(JunitTestRun.hostname == hostname)
-            query = query.filter(or_(*conditions))
-        if ("name" in q) and (len(q["name"]) > 0):
-            conditions = []
-            for name in q["name"]:
-                conditions.append(JunitTestRun.name == name)
-            query = query.filter(or_(*conditions))
-        if ("classname" in q) and (len(q["classname"]) > 0):
-            conditions = []
-            for classname in q["classname"]:
-                conditions.append(JunitTestRun.classname == classname)
-            query = query.filter(or_(*conditions))
+        query = self.__filterListInQuery(q, "hostname", JunitTestRun.hostname, query)
+        query = self.__filterListInQuery(q, "name", JunitTestRun.name, query)
+        query = self.__filterListInQuery(q, "classname", JunitTestRun.classname, query)
         if "timeIsLower" in q:
             query = query.filter(JunitTestRun.time < q["timeIsLower"])
         if "timeIsHigher" in q:
             query = query.filter(JunitTestRun.time > q["timeIsHigher"])
-        if ("state" in q) and (len(q["state"]) > 0):
-            conditions = []
-            for state in q["state"]:
-                conditions.append(JunitTestRun.state == state)
-            query = query.filter(or_(*conditions))
+        query = self.__filterListInQuery(q, "state", JunitTestRun.state, query)
 
         return query
+
+    def __filterListInQuery(self, queryDict, queryParameter, tableColumn, databaseQuery):
+        if (queryParameter in queryDict) and (len(queryDict[queryParameter]) > 0):
+            databaseQuery = databaseQuery.filter(tableColumn.in_(queryDict[queryParameter]))
+
+        return databaseQuery
 
     def deleteTestRun(self, id):
         testRun = self.scopedSession.query(JunitTestRun).filter(JunitTestRun.id == id).one()
