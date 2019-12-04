@@ -1,19 +1,12 @@
-<!DOCTYPE html>
+{% extends 'layout.html' %}
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-    <head>
-        <title>JUnit Simple Storage</title>
-    </head>
+{% block title %}Basic statistics{% endblock %}
 
-    <body>
-        <h1>JUnit Simple Storage</h1>
-        <h2>Basic statistics</h2>
-
-        <table>
-            <tr>
-                <td>Number of test runs</td>
-                <td>{{ statistics.numberOfTestRuns }}</td>
-            </tr>
-        </table>
-    </body>
-</html>
+{% block content %}
+<table>
+    <tr>
+        <td>Number of test runs</td>
+        <td>{{ statistics.numberOfTestRuns }}</td>
+    </tr>
+</table>
+{% endblock %}
