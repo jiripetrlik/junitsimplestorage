@@ -22,7 +22,11 @@ class JunitDatabase:
         return result
 
     def insertTestRuns(self, testRuns, labels = {}):
+        importTime = datetime.now()
+
         for testRun in testRuns:
+            testRun.importTime = importTime
+
             testRun.labels = []
             for key in labels:
                 label = Label()
@@ -77,6 +81,12 @@ class JunitDatabase:
 
     def __basicQueryFilter(self, q, query):
         query = self.__filterListInQuery(q, "id", JunitTestRun.id, query)
+        if ("minImportTime" in q) and (len(q["minImportTime"]) > 0):
+            t = datetime.fromisoformat(q["minImportTime"])
+            query = query.filter(JunitTestRun.importTime > t)
+        if ("maxImportTime" in q) and (len(q["maxImportTime"]) > 0):
+            t = datetime.fromisoformat(q["maxImportTime"])
+            query = query.filter(JunitTestRun.importTime < t)
         query = self.__filterListInQuery(q, "testSuiteName", JunitTestRun.testSuiteName, query)
         if ("minTimeDate" in q) and (len(q["minTimeDate"]) > 0):
             t = datetime.fromisoformat(q["minTimeDate"])
@@ -113,6 +123,7 @@ class JunitTestRun(Base):
     __tablename__ = "test_run"
 
     id = Column(Integer, primary_key=True)
+    importTime = Column(DateTime)
     testSuiteName = Column(String)
     timestamp = Column(DateTime)
     hostname = Column(String)

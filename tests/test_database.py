@@ -88,7 +88,25 @@ def test_query_by_name(connectionString, exampleJunitString):
 
     engine.dispose()
 
-def test_query_by_time(connectionString, exampleJunitString):
+def test_query_by_timestamp(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns)
+
+    minTimeDate = datetime.datetime.now() - datetime.timedelta.days(1)
+    maxTimeDate = datetime.datetime.now() + datetime.timedelta.days(1)
+    testRuns = database.queryTestRuns({
+        "minImportTime" : minTimeDate,
+        "maxImportTime" : maxTimeDate
+        })
+    assert len(testRuns) > 0
+
+def test_query_by_timestamp(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()
     session = __scopedSession(engine)
