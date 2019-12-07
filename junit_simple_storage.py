@@ -11,7 +11,7 @@ import os
 app = connexion.App(__name__, specification_dir='./')
 
 @app.route('/')
-def hello():
+def statistic():
     statistics = {
         "numberOfTestRuns" : rest.junitDatabase.numberOfTestRuns()
     }

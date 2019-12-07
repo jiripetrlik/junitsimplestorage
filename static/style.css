@@ -1,0 +1,38 @@
+body {
+    font-family: sans-serif;
+}
+
+h1 {
+    font-family: sans-serif;
+    font-size: 28px;
+    color: black;
+    text-align: center;
+    font-weight: bolder;
+}
+
+h2 {
+    font-family: sans-serif;
+    font-size: 18px;
+    color: darkgray;
+    text-align: center;
+    font-weight: bolder;
+}
+
+#main_menu {
+    float: left;
+    margin-top: 40px;
+    width: 160px;
+    height: 150px;
+    margin-bottom: 300px;
+    scroll: hidden;
+    border-style: solid;
+    border-width: thin;
+}
+
+#main_menu h1 {
+    font-family: sans-serif;
+    font-size: 18px;
+    color: black;
+    text-align: center;
+    font-weight: bolder;
+}
