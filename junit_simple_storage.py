@@ -31,6 +31,16 @@ def getAppConfig():
         if (variable in os.environ) and (len(os.environ[variable]) > 0):
             config[variable] = os.environ[variable]
 
+    # Read configuration from commad line arguments
+    parser = argparse.ArgumentParser(description = "JUnit Simple Storage")
+    parser.add_argument("-d", "--database", required=False, help="SQL database URI", type=str)
+    parser.add_argument("-e", "--echo-sql", action="store_true", required=False, help="Echo SQL queries")
+    args = parser.parse_args()
+    if args.database != None:
+        config["SQLALCHEMY_DATABASE_URI"] = args.database
+    if args.echo_sql == True:
+        config["SQLALCHEMY_ECHO"] = args.echo_sql
+    
     return config
 
 if __name__ == '__main__':
