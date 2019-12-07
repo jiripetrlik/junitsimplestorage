@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block title %}Basic statistics{% endblock %}
+
+{% block content %}
+<table class="info_table">
+    <tr>
+        <td>Number of test runs:</td>
+        <td>{{ statistics.numberOfTestRuns }}</td>
+    </tr>
+    <tr>
+        <td>Oldest test run:</td>
+        <td>{{ statistics.minImportTime }}</td>
+    </tr>
+    <tr>
+        <td>Newest test run:</td>
+        <td>{{ statistics.maxImportTime }}</td>
+    </tr>
+    <tr>
+        <td>Shortest test run:</td>
+        <td>{{ statistics.minTime }} s</td>
+    </tr>
+    <tr>
+        <td>Longest test run:</td>
+        <td>{{ statistics.maxTime }} s</td>
+    </tr>
+</table>
+{% endblock %}

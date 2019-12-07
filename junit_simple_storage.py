@@ -7,16 +7,33 @@ from database import JunitDatabase
 import rest
 import argparse
 import os
+import datetime
 
 app = connexion.App(__name__, specification_dir='./')
 
 @app.route('/')
 def statistic():
     statistics = {
-        "numberOfTestRuns" : rest.junitDatabase.numberOfTestRuns()
+        "numberOfTestRuns" : rest.junitDatabase.numberOfTestRuns(),
+        "minImportTime" : showTime(rest.junitDatabase.minImportTime()),
+        "maxImportTime" : showTime(rest.junitDatabase.maxImportTime()),
+        "minTime" : showNumericValue(rest.junitDatabase.minTime()),
+        "maxTime" : showNumericValue(rest.junitDatabase.maxTime())
     }
 
-    return render_template("index.html", statistics = statistics)
+    return render_template("statistics.html", statistics = statistics)
+
+def showNumericValue(variable):
+    if variable == None:
+        return "-"
+    else:
+        return round(variable, 2)
+
+def showTime(variable):
+    if variable == None:
+        return "-"
+    else:
+        return variable.strftime("%Y-%m-%d %H:%M:%S")
 
 def getAppConfig():
     # Default config
