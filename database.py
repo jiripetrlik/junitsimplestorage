@@ -124,14 +124,14 @@ class JunitTestRun(Base):
 
     id = Column(Integer, primary_key=True)
     importTime = Column(DateTime)
-    testSuiteName = Column(String)
+    testSuiteName = Column(String(255))
     timestamp = Column(DateTime)
-    hostname = Column(String)
-    name = Column(String)
-    classname = Column(String)
+    hostname = Column(String(255))
+    name = Column(String(255))
+    classname = Column(String(255))
     time = Column(Numeric)
-    state = Column(String)
-    message = Column(String)
+    state = Column(String(255))
+    message = Column(String(255))
     labels = relationship("Label", back_populates = "testRuns", lazy = "joined", cascade = "all, delete, delete-orphan")
 
     def as_dict(self):
@@ -147,7 +147,7 @@ class Label(Base):
 
     id = Column(Integer, primary_key=True)
     testRun = Column(Integer, ForeignKey('test_run.id'), nullable=False)
-    key = Column(String, nullable=False)
-    value = Column(String, nullable=False)
+    key = Column(String(255), nullable=False)
+    value = Column(String(255), nullable=False)
 
     testRuns = relationship("JunitTestRun", back_populates = "labels")
