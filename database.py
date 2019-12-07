@@ -17,6 +17,22 @@ class JunitDatabase:
         result = self.scopedSession.query(func.count(JunitTestRun.id)).one()
         return result[0]
 
+    def minImportTime(self):
+        result = self.scopedSession.query(func.min(JunitTestRun.importTime)).one()
+        return result[0]
+    
+    def maxImportTime(self):
+        result = self.scopedSession.query(func.max(JunitTestRun.importTime)).one()
+        return result[0]
+
+    def minTime(self):
+        result = self.scopedSession.query(func.min(JunitTestRun.time)).one()
+        return result[0]
+
+    def maxTime(self):
+        result = self.scopedSession.query(func.max(JunitTestRun.time)).one()
+        return result[0]
+
     def getTestRuns(self, page, items):
         result = self.scopedSession.query(JunitTestRun).order_by(JunitTestRun.id).offset((page - 1) * items).limit(items).all()
         return result

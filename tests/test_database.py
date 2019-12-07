@@ -50,6 +50,58 @@ def test_number_of_test_runs(connectionString, exampleJunitString):
 
     assert database.numberOfTestRuns() == numberOfTestRuns
 
+def test_min_import_time(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns)
+
+    minImportTime = database.minImportTime()
+    assert minImportTime != None
+
+def test_max_import_time(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns)
+
+    maxImportTime = database.maxImportTime()
+    assert maxImportTime != None
+
+def test_min_time(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns)
+
+    minTime = database.minTime()
+    assert minTime != None
+
+def test_max_time(connectionString, exampleJunitString):
+    engine = create_engine(connectionString)
+    engine.connect()
+    session = __scopedSession(engine)
+    database = JunitDatabase(engine, session)
+    database.createSchema()
+
+    testRuns = loadJunitTestRuns(exampleJunitString)
+    database.insertTestRuns(testRuns)
+
+    maxTime = database.maxTime()
+    assert maxTime != None
+
 def test_save_test_runs_with_labels(connectionString, exampleJunitString):
     engine = create_engine(connectionString)
     engine.connect()
