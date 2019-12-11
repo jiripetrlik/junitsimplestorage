@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block title %}Basic statistics{% endblock %}
+
+{% block content %}
+    <table class="info_table">
+        {% for testRun in testRuns %}
+            <tr>
+                <td>{{ testRun.name }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

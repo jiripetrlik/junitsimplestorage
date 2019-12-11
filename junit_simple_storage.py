@@ -9,6 +9,8 @@ import argparse
 import os
 import datetime
 
+ITEMS_PER_PAGE = 50
+
 app = connexion.App(__name__, specification_dir='./')
 
 @app.route('/')
@@ -22,6 +24,19 @@ def statistic():
     }
 
     return render_template("statistics.html", statistics = statistics)
+
+@app.route("/list")
+@app.route("/list/<page>")
+def list(page = 1):
+    numberOfTestRuns = rest.junitDatabase.numberOfTestRuns()
+    testRuns = rest.junitDatabase.getTestRuns(page, ITEMS_PER_PAGE)
+
+    data = {
+        "numberOfTestRuns" : numberOfTestRuns,
+        "page" : page,
+        "testRuns" : testRuns
+    }
+    return render_template("list.html", **data)
 
 def showNumericValue(variable):
     if variable == None:
