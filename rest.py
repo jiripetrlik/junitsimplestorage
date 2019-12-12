@@ -12,7 +12,7 @@ def get(page = None, items = None):
     if items == None:
         items = 100
     
-    testRuns = junitDatabase.getTestRuns(page, items)
+    testRuns = junitDatabase.getTestRuns(page, items).items
     testRuns = list(map(lambda t : t.as_dict(), testRuns))
 
     return testRuns

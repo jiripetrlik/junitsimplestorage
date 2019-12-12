@@ -231,7 +231,7 @@ def test_delete_test_run(connectionString, exampleJunitString):
     testRuns = loadJunitTestRuns(exampleJunitString)
     database.insertTestRuns(testRuns, {"label1" : "value1"})
 
-    testRuns = database.getTestRuns(1, 100)
+    testRuns = session.query(JunitTestRun).all()
     testRunIds = []
     for testRun in testRuns:
         testRunIds.append(testRun.id)
@@ -240,7 +240,7 @@ def test_delete_test_run(connectionString, exampleJunitString):
 
     database.deleteTestRun(2)
 
-    testRuns = database.getTestRuns(1, 100)
+    testRuns = session.query(JunitTestRun).all()
     testRunIds = []
     for testRun in testRuns:
         testRunIds.append(testRun.id)

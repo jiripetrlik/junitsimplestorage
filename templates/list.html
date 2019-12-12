@@ -4,7 +4,7 @@
 
 {% block content %}
     <table class="info_table">
-        {% for testRun in testRuns %}
+        {% for testRun in testRuns.items %}
             <tr>
                 <td>{{ testRun.name }}</td>
             </tr>

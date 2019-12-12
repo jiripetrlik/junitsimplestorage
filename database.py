@@ -34,7 +34,7 @@ class JunitDatabase:
         return result[0]
 
     def getTestRuns(self, page, items):
-        result = self.scopedSession.query(JunitTestRun).order_by(JunitTestRun.id).offset((page - 1) * items).limit(items).all()
+        result = self.scopedSession.query(JunitTestRun).order_by(JunitTestRun.id).paginate(page, items)
         return result
 
     def insertTestRuns(self, testRuns, labels = {}):
