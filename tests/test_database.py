@@ -1,8 +1,8 @@
-from database import JunitDatabase, JunitTestRun, Label
+from junitsimplestorage.database import JunitDatabase, JunitTestRun, Label
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker, scoped_session
 import datetime
-from junit import loadJunitTestRuns
+from junitsimplestorage.junit import loadJunitTestRuns
 
 def test_create_schema(connectionString):
     engine = create_engine(connectionString)

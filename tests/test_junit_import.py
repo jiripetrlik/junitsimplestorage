@@ -1,4 +1,4 @@
-from junit import loadJunitTestRuns
+from junitsimplestorage.junit import loadJunitTestRuns
 
 def test_import(exampleJunitString):
     testRuns = loadJunitTestRuns(exampleJunitString)

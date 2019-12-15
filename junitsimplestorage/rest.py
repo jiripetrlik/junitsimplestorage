@@ -1,8 +1,8 @@
 import json
 import yaml
 import connexion
-from junit import loadJunitTestRuns
-from database import JunitTestRun
+from junitsimplestorage.junit import loadJunitTestRuns
+from junitsimplestorage.database import JunitTestRun
 
 junitDatabase = None
 

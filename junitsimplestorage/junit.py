@@ -1,5 +1,5 @@
 from junitparser import JUnitXml
-from database import JunitTestRun
+from junitsimplestorage.database import JunitTestRun
 import datetime
 
 TEST_STATUS_PASSED = "passed"

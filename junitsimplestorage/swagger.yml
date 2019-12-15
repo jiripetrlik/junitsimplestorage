@@ -8,7 +8,7 @@ servers:
 paths:
   /:
     get:
-      operationId: "rest.get"
+      operationId: "junitsimplestorage.rest.get"
       summary: "Get test runs"
       parameters:
         - name: page
@@ -28,7 +28,7 @@ paths:
           description: "List of test runs was returned"
   /import:
     post:
-      operationId: "rest.import_junit"
+      operationId: "junitsimplestorage.rest.import_junit"
       summary: "Import JUnit file to database"
       parameters:
         - name: labels
@@ -48,7 +48,7 @@ paths:
           description: "Successfully imported"
   /query:
     post:
-      operationId: "rest.query"
+      operationId: "junitsimplestorage.rest.query"
       summary: "Query Junit storage"
       requestBody:
         description: "Query"
@@ -61,7 +61,7 @@ paths:
           description: "List of test runs was returned"
   /delete/{id}:
     delete:
-      operationId: "rest.delete"
+      operationId: "junitsimplestorage.rest.delete"
       summary: "Delete test run"
       parameters: 
         - name: id
@@ -74,7 +74,7 @@ paths:
           description: "Test run was deleted"
   /health:
     get:
-      operationId: "rest.health"
+      operationId: "junitsimplestorage.rest.health"
       summary: "Health endpoint for readiness and health probes"
       description: "Return 200 if application is running"
       responses:

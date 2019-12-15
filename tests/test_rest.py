@@ -1,4 +1,4 @@
-from rest import __parseLabels
+from junitsimplestorage.rest import __parseLabels
 
 def test_parse_labels_empty():
     str = ""
