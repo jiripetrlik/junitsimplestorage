@@ -1,63 +1,26 @@
 import connexion
-from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
-import argparse
 import os
 import datetime
-
-ITEMS_PER_PAGE = 50
 
 def create_app(config={}):
     app = connexion.App(__name__, specification_dir='./')
     from junitsimplestorage.database import JunitDatabase
     import junitsimplestorage.rest as rest
+    import junitsimplestorage.gui as gui
 
     finalConfig = getAppConfig()
     finalConfig.update(config)
     app.app.config.update(finalConfig)
     db = SQLAlchemy(app.app)
-    rest.junitDatabase = JunitDatabase(db.engine, db.session)
-    rest.junitDatabase.createSchema()
+    junitDatabase = JunitDatabase(db.engine, db.session)
+    junitDatabase.createSchema()
+    rest.junitDatabase = junitDatabase
+    gui.junitDatabase = junitDatabase
     app.add_api('swagger.yml')
-
-    @app.route('/')
-    def statistic():
-        statistics = {
-            "numberOfTestRuns" : rest.junitDatabase.numberOfTestRuns(),
-            "minImportTime" : showTime(rest.junitDatabase.minImportTime()),
-            "maxImportTime" : showTime(rest.junitDatabase.maxImportTime()),
-            "minTime" : showNumericValue(rest.junitDatabase.minTime()),
-            "maxTime" : showNumericValue(rest.junitDatabase.maxTime())
-        }
-
-        return render_template("statistics.html", statistics = statistics)
-
-    @app.route("/list")
-    @app.route("/list/<page>")
-    def list(page = 1):
-        numberOfTestRuns = rest.junitDatabase.numberOfTestRuns()
-        testRuns = rest.junitDatabase.getTestRuns(page, ITEMS_PER_PAGE)
-
-        data = {
-            "numberOfTestRuns" : numberOfTestRuns,
-            "page" : page,
-            "testRuns" : testRuns
-        }
-        return render_template("list.html", **data)
+    app.app.register_blueprint(gui.bp)
 
     return app.app
-
-def showNumericValue(variable):
-    if variable == None:
-        return "-"
-    else:
-        return round(variable, 2)
-
-def showTime(variable):
-    if variable == None:
-        return "-"
-    else:
-        return variable.strftime("%Y-%m-%d %H:%M:%S")
 
 def getAppConfig():
     # Default config
