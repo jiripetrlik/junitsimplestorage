@@ -10,4 +10,13 @@
             </tr>
         {% endfor %}
     </table>
+    <ul class="bottom_menu">
+        {% if testRuns.has_prev == True %}
+        <li><a href="{{ url_for('gui.list', page = testRuns.prev_num) }}">Previous</a></li>
+        {% endif %}
+
+        {% if testRuns.has_next == True %}
+        <li><a href="{{ url_for('gui.list', page = testRuns.next_num) }}">Next</a></li>
+        {% endif %}
+    </ul>
 {% endblock %}

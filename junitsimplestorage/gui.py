@@ -21,6 +21,7 @@ def statistic():
 @bp.route("/list")
 @bp.route("/list/<page>")
 def list(page = 1):
+    page = int(page)
     numberOfTestRuns = junitDatabase.numberOfTestRuns()
     testRuns = junitDatabase.getTestRuns(page, ITEMS_PER_PAGE)
 

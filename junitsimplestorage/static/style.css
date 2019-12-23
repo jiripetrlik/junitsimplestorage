@@ -48,3 +48,13 @@ h2 {
     padding-left: 10px;
     padding-right: 10px;
 }
+
+ul.bottom_menu {
+    text-align: center;
+}
+
+ul.bottom_menu li {
+    display:inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+}
