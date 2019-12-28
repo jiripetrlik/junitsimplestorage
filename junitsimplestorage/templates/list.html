@@ -3,13 +3,35 @@
 {% block title %}Basic statistics{% endblock %}
 
 {% block content %}
-    <table class="info_table">
-        {% for testRun in testRuns.items %}
-            <tr>
-                <td>{{ testRun.name }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    {% for testRun in testRuns.items %}
+        <div class="test_run">
+            <div class="test_run_header">
+                <ul>
+                    <li><span class="type">Class Name:</span> {{ testRun.classname if testRun.classname }}</li>
+                    <li><span class="type">Test Name:</span> {{ testRun.name if testRun.name }}</li>
+                    <li><span class="type">State:</span> {{ testRun.state if testRun.state }}</li>
+                </ul>
+            </div>
+            <div class="test_run_body">
+                <ul>
+                    <li><span class="type">Import time:</span> {{ testRun.importTime if testRun.importTime }}</li>
+                    <li><span class="type">Timestamp:</span> {{ testRun.timestamp if testRun.timestamp }}</li>
+                    <li><span class="type">Hostname:</span> {{ testRun.hostname if testRun.hostname }}</li>
+                    <li><span class="type">Time:</span> {{ testRun.time if testRun.time }} s</li>
+                    <li><span class="type">Message:</span> {{ testRun.message if testRun.message }}</li>
+                    <li>
+                        <span class="type">Labels:</span>
+                        <ul>
+                            {% for label in testRun.labels %}
+                                <li>{{ label.key }} = {{ label.value }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+    
     <ul class="bottom_menu">
         {% if testRuns.has_prev == True %}
         <li><a href="{{ url_for('gui.list', page = testRuns.prev_num) }}">Previous</a></li>

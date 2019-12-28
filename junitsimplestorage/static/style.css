@@ -2,6 +2,13 @@ body {
     font-family: sans-serif;
 }
 
+.content {
+    width: 80%;
+    float: left;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
 h1 {
     font-family: sans-serif;
     font-size: 28px;
@@ -23,8 +30,7 @@ h2 {
     margin-top: 40px;
     width: 160px;
     height: 150px;
-    margin-bottom: 300px;
-    scroll: hidden;
+    margin-bottom: 0px;
     border-style: solid;
     border-width: thin;
 }
@@ -47,6 +53,33 @@ h2 {
     border: 1px solid;
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.test_run {
+    border: 1px solid;
+    margin-bottom: 10px;
+}
+
+.test_run_header {
+    background-color: lightgray;
+}
+
+.test_run_header ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    list-style-type: none;
+}
+
+.test_run_body ul {
+    list-style-type: none;
+}
+
+.test_run .type {
+    font-weight: bold;
+}
+
+.test_run_body ul ul {
+    list-style-type: disc;
 }
 
 ul.bottom_menu {
