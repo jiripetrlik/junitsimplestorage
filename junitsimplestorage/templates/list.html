@@ -14,8 +14,8 @@
             </div>
             <div class="test_run_body">
                 <ul>
-                    <li><span class="type">Import time:</span> {{ testRun.importTime if testRun.importTime }}</li>
-                    <li><span class="type">Timestamp:</span> {{ testRun.timestamp if testRun.timestamp }}</li>
+                    <li><span class="type">Import time:</span> {{ testRun.importTime.strftime('%Y-%m-%d %H:%M:%S') if testRun.importTime }}</li>
+                    <li><span class="type">Timestamp:</span> {{ testRun.timestamp.strftime('%Y-%m-%d %H:%M:%S') if testRun.timestamp }}</li>
                     <li><span class="type">Hostname:</span> {{ testRun.hostname if testRun.hostname }}</li>
                     <li><span class="type">Time:</span> {{ testRun.time if testRun.time }} s</li>
                     <li><span class="type">Message:</span> {{ testRun.message if testRun.message }}</li>
