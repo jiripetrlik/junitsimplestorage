@@ -82,6 +82,11 @@ h2 {
     list-style-type: disc;
 }
 
+.test_run_delete_button_wrapper {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
 ul.bottom_menu {
     text-align: center;
 }
@@ -90,4 +95,8 @@ ul.bottom_menu li {
     display:inline-block;
     margin-left: 10px;
     margin-right: 10px;
+}
+
+#dialog {
+    display: none;
 }

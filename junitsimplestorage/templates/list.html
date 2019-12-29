@@ -5,6 +5,7 @@
 {% block content %}
     {% for testRun in testRuns.items %}
         <div class="test_run">
+            <input type="hidden" name="id" value="{{ testRun.id }}"/>
             <div class="test_run_header">
                 <ul>
                     <li><span class="type">Class Name:</span> {{ testRun.classname if testRun.classname }}</li>
@@ -28,6 +29,9 @@
                         </ul>
                     </li>
                 </ul>
+                <div class="test_run_delete_button_wrapper">
+                    <button class="test_run_delete_button">Delete</button>
+                </div>
             </div>
         </div>
     {% endfor %}

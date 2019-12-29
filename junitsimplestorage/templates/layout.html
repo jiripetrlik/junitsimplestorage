@@ -30,5 +30,9 @@
 
             {% block content %}{% endblock %}
         </div>
+        <div id="dialog">
+            <p>Content</p>
+        </div>
+        <input id="root_url" type="hidden" value="{{ url_for('gui.statistic') }}"/>
     </body>
 </html>
