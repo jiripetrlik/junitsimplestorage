@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block title %}Import Junit file{% endblock %}
+
+{% block content %}
+    <form id="junit_import_form" method="POST" enctype="multipart/form-data">
+        <div id="form_type_wrapper">
+            <input type="radio" name="type" value="text" checked="checked">From text
+            <br/>
+            <input type="radio" name="type" value="file">From file
+            <br/>
+        </div>
+        <textarea name="junit"></textarea>
+        <br/>
+        <input type="file" name="file"/>
+        <br/>
+        <input type="submit"/>
+    </form>
+{% endblock %}

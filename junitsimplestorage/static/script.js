@@ -1,3 +1,17 @@
+function showTextareaOrFile() { 
+    var type = $( "#junit_import_form input:radio[name=type]:checked" ).val()
+
+    if (type == "text") {
+        $( "#junit_import_form input[type=file]" ).hide()
+        $( "#junit_import_form textarea" ).show()
+    }
+
+    if (type == "file") {
+        $( "#junit_import_form textarea" ).hide()
+        $( "#junit_import_form input[type=file]" ).show()
+    }
+}
+
 function showConfirmationDialog(title, text, f) {
     $( "#dialog" ).attr("title", title)
     $( "#dialog > p" ).text(text)
@@ -36,4 +50,10 @@ $(document).ready(function(){
             })
         })
     })
+
+    $( "#junit_import_form input[name=type]" ).change(function() {
+        showTextareaOrFile()
+    })
+
+    showTextareaOrFile()
 });

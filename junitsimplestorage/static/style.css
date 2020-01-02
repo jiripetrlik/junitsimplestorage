@@ -97,6 +97,21 @@ ul.bottom_menu li {
     margin-right: 10px;
 }
 
+#junit_import_form {
+    text-align: center;
+}
+
+#form_type_wrapper {
+    display: table;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#junit_import_form textarea {
+    width: 90%;
+    height: 600px;
+}
+
 #dialog {
     display: none;
 }
