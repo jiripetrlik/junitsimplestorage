@@ -26,7 +26,8 @@ def getAppConfig():
     # Default config
     config = {
         "SQLALCHEMY_DATABASE_URI" : "sqlite:///" + os.getcwd() + "/test.db",
-        "SQLALCHEMY_ECHO" : False
+        "SQLALCHEMY_ECHO" : False,
+        "SECRET_KEY" : os.urandom(24)
     }
 
     # Read configuration from environment variables

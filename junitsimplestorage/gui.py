@@ -3,6 +3,7 @@ from flask import request
 from flask import redirect
 from flask import render_template
 from flask import url_for
+from flask import flash
 from junitsimplestorage.junit import loadJunitTestRuns
 
 bp = Blueprint("gui", __name__)
@@ -41,12 +42,14 @@ def importTestRuns():
     if request.method == "POST":
         if request.form["type"] == "text":
             testRuns = loadJunitTestRuns(request.form["junit"])
-            junitDatabase.insertTestRuns(testRuns, {})
+            testRunIds = junitDatabase.insertTestRuns(testRuns, {})
+            flash("{} test runs were created".format(len(testRunIds)))
 
         if request.form["type"] == "file":
             data = request.files["file"].read()
             testRuns = loadJunitTestRuns(data)
-            junitDatabase.insertTestRuns(testRuns, {})
+            testRunIds = junitDatabase.insertTestRuns(testRuns, {})
+            flash("{} test runs were created".format(len(testRunIds)))
 
         return redirect(url_for("gui.importTestRuns"))
 

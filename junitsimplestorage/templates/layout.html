@@ -27,6 +27,17 @@
         <div class="content">
             <h1>JUnit Simple Storage</h1>
             <h2>{% block title %}{% endblock %}</h2>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flashes">
+                        <ul class="flashes">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endwith %}
 
             {% block content %}{% endblock %}
         </div>
