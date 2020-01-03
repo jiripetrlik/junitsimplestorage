@@ -1,14 +1,14 @@
-function showTextareaOrFile() { 
+function showTextareaOrFile(effect) { 
     var type = $( "#junit_import_form input:radio[name=type]:checked" ).val()
 
     if (type == "text") {
-        $( "#junit_import_form input[type=file]" ).hide()
-        $( "#junit_import_form textarea" ).show()
+        $( "#junit_import_form input[type=file]" ).hide(effect)
+        $( "#junit_import_form textarea" ).show(effect)
     }
 
     if (type == "file") {
-        $( "#junit_import_form textarea" ).hide()
-        $( "#junit_import_form input[type=file]" ).show()
+        $( "#junit_import_form textarea" ).hide(effect)
+        $( "#junit_import_form input[type=file]" ).show(effect)
     }
 }
 
@@ -52,7 +52,7 @@ $(document).ready(function(){
     })
 
     $( "#junit_import_form input[name=type]" ).change(function() {
-        showTextareaOrFile()
+        showTextareaOrFile("slow")
     })
 
     showTextareaOrFile()
