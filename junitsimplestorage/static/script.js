@@ -1,3 +1,25 @@
+function getNumberOfLabels() {
+    var names = $( "div.label_item input" ).map(function() {
+        return $(this).attr("name")
+    })
+    names = names.get()
+
+    var max = 0
+    for (var i=0; i < names.length; i++) {
+        name = names[i]
+        if (name.includes("label_key_")) {
+            var number = name.replace("label_key_", "")
+            number = parseInt(number)
+
+            if (number > max) {
+                max = number
+            }
+        }
+    }
+
+    return max
+}
+
 function showTextareaOrFile(effect) { 
     var type = $( "#junit_import_form input:radio[name=type]:checked" ).val()
 
@@ -53,6 +75,27 @@ $(document).ready(function(){
 
     $( "#junit_import_form input[name=type]" ).change(function() {
         showTextareaOrFile("slow")
+    })
+
+    $( "div.labels_buttons input[type=button][name=add]" ).click(function() {
+        var numberOfLabels = getNumberOfLabels()
+        var html = `
+            <div class="label_item">
+                <input type="text" name="label_key_number"/> = <input type="text" name="label_value_number"/>
+            </div>
+        `
+        html = html.replace(/number/g, numberOfLabels + 1)
+
+        $( "div.labels" ).append(html)
+    })
+
+    $( "div.labels_buttons input[type=button][name=remove]" ).click(function() {
+        var numberOfLabels = getNumberOfLabels()
+
+        if (numberOfLabels > 0) {
+            var selector = "input[name=label_key_" + numberOfLabels + "]"
+            $( selector ).parents("div.label_item").remove()
+        }
     })
 
     showTextareaOrFile()

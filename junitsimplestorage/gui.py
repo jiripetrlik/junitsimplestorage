@@ -40,15 +40,24 @@ def list(page = 1):
 @bp.route("/import", methods = ("GET", "POST"))
 def importTestRuns():
     if request.method == "POST":
+        labelNumber = 1
+        labels = {}
+        while "label_key_{}".format(labelNumber) in request.form:
+            key = request.form["label_key_{}".format(labelNumber)]
+            value = request.form["label_value_{}".format(labelNumber)]
+            labels[key] = value
+            
+            labelNumber = labelNumber + 1
+
         if request.form["type"] == "text":
             testRuns = loadJunitTestRuns(request.form["junit"])
-            testRunIds = junitDatabase.insertTestRuns(testRuns, {})
+            testRunIds = junitDatabase.insertTestRuns(testRuns, labels)
             flash("{} test runs were created".format(len(testRunIds)))
 
         if request.form["type"] == "file":
             data = request.files["file"].read()
             testRuns = loadJunitTestRuns(data)
-            testRunIds = junitDatabase.insertTestRuns(testRuns, {})
+            testRunIds = junitDatabase.insertTestRuns(testRuns, labels)
             flash("{} test runs were created".format(len(testRunIds)))
 
         return redirect(url_for("gui.importTestRuns"))
