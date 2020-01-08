@@ -125,3 +125,7 @@ components:
           type: object
           additionalProperties:
             type: string
+        page:
+          type: number
+        itemsPerPage:
+          type: number

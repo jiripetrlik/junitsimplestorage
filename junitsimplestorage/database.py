@@ -5,6 +5,8 @@ from datetime import datetime
 
 Base = declarative_base()
 
+DEFAULT_ITEMS_PER_PAGE = 50
+
 class JunitDatabase:
     def __init__(self, engine, scopedSession):
         self.engine = engine
@@ -63,9 +65,21 @@ class JunitDatabase:
 
     def queryTestRuns(self, q):
         if ("labels" in q) and (len(q["labels"]) > 0):
-            return self.__queryTestRunsWithLabels(q)
+            query = self.__queryTestRunsWithLabels(q)
         else:
-            return self.__queryTestRunsWithoutLabels(q)
+            query = self.__queryTestRunsWithoutLabels(q)
+        
+        if "page" in q:
+            if "itemsPerPage" in q:
+                itemsPerPage = q["itemsPerPage"]
+            else:
+                itemsPerPage = DEFAULT_ITEMS_PER_PAGE
+
+            results = query.paginate(q["page"], itemsPerPage)
+        else:
+            results = query.all()
+
+        return results
 
     def __queryTestRunsWithoutLabels(self, q):
         query = self.scopedSession.query(JunitTestRun)
@@ -73,7 +87,7 @@ class JunitDatabase:
         query = self.__basicQueryFilter(q, query)
         query.order_by(JunitTestRun.id)
 
-        return query.all()
+        return query
 
     def __queryTestRunsWithLabels(self, q):
         query = self.scopedSession.query(JunitTestRun.id)
@@ -93,7 +107,7 @@ class JunitDatabase:
         query = self.scopedSession.query(JunitTestRun)
         query = query.filter(JunitTestRun.id.in_(testRunIds))
 
-        return query.all()
+        return query
 
     def __basicQueryFilter(self, q, query):
         query = self.__filterListInQuery(q, "id", JunitTestRun.id, query)
@@ -123,7 +137,10 @@ class JunitDatabase:
 
     def __filterListInQuery(self, queryDict, queryParameter, tableColumn, databaseQuery):
         if (queryParameter in queryDict) and (len(queryDict[queryParameter]) > 0):
-            databaseQuery = databaseQuery.filter(tableColumn.in_(queryDict[queryParameter]))
+            l = queryDict[queryParameter]
+            if not isinstance(l, list):
+                l = [l]
+            databaseQuery = databaseQuery.filter(tableColumn.in_(l))
 
         return databaseQuery
 

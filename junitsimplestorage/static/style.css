@@ -124,9 +124,22 @@ ul.bottom_menu li {
     text-align: left;
 }
 
+form ul.errors {
+    color: red;
+}
+
 #junit_import_form textarea {
     width: 90%;
     height: 600px;
+}
+
+table.query {
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+table.query td.submit {
+    text-align: center;
 }
 
 #dialog {

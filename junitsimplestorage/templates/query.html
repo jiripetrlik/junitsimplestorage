@@ -1,0 +1,190 @@
+{% extends 'layout.html' %}
+
+{% block title %}Find test runs{% endblock %}
+
+{% block content %}
+    <form method="get">
+        <input type="hidden" name="page" value="1"/>
+        <table class="query">
+            <tr>
+                <td>{{ form.id.label }}:</td>
+                <td>{{ form.id()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.id.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.minImportTime.label }}:</td>
+                <td>{{ form.minImportTime()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.minImportTime.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.maxImportTime.label }}:</td>
+                <td>{{ form.maxImportTime()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.maxImportTime.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.minTimeDate.label }}:</td>
+                <td>{{ form.minTimeDate()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.minTimeDate.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.maxTimeDate.label }}:</td>
+                <td>{{ form.maxTimeDate()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.maxTimeDate.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.hostname.label }}:</td>
+                <td>{{ form.hostname()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.hostname.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.name.label }}:</td>
+                <td>{{ form.name()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.name.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.classname.label }}:</td>
+                <td>{{ form.classname()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.classname.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.timeIsLower.label }}:</td>
+                <td>{{ form.timeIsLower()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.timeIsLower.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.timeIsHigher.label }}:</td>
+                <td>{{ form.timeIsHigher()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.timeIsHigher.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.state.label }}:</td>
+                <td>{{ form.state()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.state.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ form.message.label }}:</td>
+                <td>{{ form.message()|safe }}</td>
+                <td>
+                    <ul class=errors>
+                        {% for error in form.message.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="submit"><input type="submit" value="Find"></td>
+            </tr>
+        </table>
+    </form>
+
+    {% if results %}
+        {% for testRun in results.items %}
+            <div class="test_run">
+                <input type="hidden" name="id" value="{{ testRun.id }}"/>
+                <div class="test_run_header">
+                    <ul>
+                        <li><span class="type">Class Name:</span> {{ testRun.classname if testRun.classname }}</li>
+                        <li><span class="type">Test Name:</span> {{ testRun.name if testRun.name }}</li>
+                        <li><span class="type">State:</span> {{ testRun.state if testRun.state }}</li>
+                    </ul>
+                </div>
+                <div class="test_run_body">
+                    <ul>
+                        <li><span class="type">Import time:</span> {{ testRun.importTime.strftime('%Y-%m-%d %H:%M:%S') if testRun.importTime }}</li>
+                        <li><span class="type">Timestamp:</span> {{ testRun.timestamp.strftime('%Y-%m-%d %H:%M:%S') if testRun.timestamp }}</li>
+                        <li><span class="type">Hostname:</span> {{ testRun.hostname if testRun.hostname }}</li>
+                        <li><span class="type">Time:</span> {{ testRun.time if testRun.time }} s</li>
+                        <li><span class="type">Message:</span> {{ testRun.message if testRun.message }}</li>
+                        <li>
+                            <span class="type">Labels:</span>
+                            <ul>
+                                {% for label in testRun.labels %}
+                                    <li>{{ label.key }} = {{ label.value }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="test_run_delete_button_wrapper">
+                        <button class="test_run_delete_button">Delete</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <ul class="bottom_menu">
+            {% if prevLink %}
+            <li><a href="{{ prevLink }}">Previous</a></li>
+            {% endif %}
+    
+            {% if nextLink %}
+            <li><a href="{{ nextLink }}">Next</a></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock %}

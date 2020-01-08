@@ -51,6 +51,13 @@ function showConfirmationDialog(title, text, f) {
     })
 }
 
+function createDatePicker(selector) {
+    var value = $(selector).val()
+    $(selector).datepicker()
+    $(selector).datepicker("option", "dateFormat", "yy-mm-dd")
+    $(selector).val(value)
+}
+
 $(document).ready(function(){
     $( ".test_run_body" ).hide()
 
@@ -99,4 +106,11 @@ $(document).ready(function(){
     })
 
     showTextareaOrFile()
+
+    var datePickerFormat = "yy-mm-dd"
+    
+    createDatePicker("#minImportTime")
+    createDatePicker("#maxImportTime")
+    createDatePicker("#minTimeDate")
+    createDatePicker("#maxTimeDate")
 });

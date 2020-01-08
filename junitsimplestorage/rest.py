@@ -13,9 +13,8 @@ def get(page = None, items = None):
         items = 100
     
     testRuns = junitDatabase.getTestRuns(page, items).items
-    testRuns = list(map(lambda t : t.as_dict(), testRuns))
 
-    return testRuns
+    return marshallTestRuns(testRuns)
 
 def import_junit(body, labels = None):
     labelsDictionary = {}
@@ -34,8 +33,7 @@ def import_junit(body, labels = None):
 
 def query(body):
     testRuns = junitDatabase.queryTestRuns(body)
-    testRuns = list(map(lambda t : t.as_dict(), testRuns))
-    return testRuns
+    return marshallTestRuns(testRuns)
 
 def delete(id):
     junitDatabase.deleteTestRun(id)
@@ -60,3 +58,14 @@ def __parseLabels(str):
         labels[key] = value
 
     return labels
+
+def marshallTestRuns(data):
+    if (type(data).__name__ == "Pagination"):       
+        return {
+            "page": data.page,
+            "per_page": data.per_page,
+            "total": data.total,
+            "items": list(map(lambda t : t.as_dict(), data.items))
+        }
+    else:
+        return list(map(lambda t : t.as_dict(), data))
