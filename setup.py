@@ -13,6 +13,7 @@ setup(
         "PyMySQL>=0.9.3",
         "PyYAML>=5.1.2",
         "SQLAlchemy==1.3.10",
-        "swagger-ui-bundle==0.0.6"
+        "swagger-ui-bundle==0.0.6",
+        "WTForms==2.2.1"
         ],
 )
