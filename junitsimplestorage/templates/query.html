@@ -3,7 +3,7 @@
 {% block title %}Find test runs{% endblock %}
 
 {% block content %}
-    <form method="get">
+    <form id="query_form" method="get">
         <input type="hidden" name="page" value="1"/>
         <table class="query">
             <tr>
@@ -138,10 +138,24 @@
                     </ul>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2" class="submit"><input type="submit" value="Find"></td>
-            </tr>
         </table>
+        <div class="labels_box">
+            <h3>Labels</h3>
+            <div class="labels">
+                {% for key, value in labels.items() %}
+                    <div class="label_item">
+                        <input type="text" name="label_key_{{loop.index}}" value="{{ key }}"/>
+                        =
+                        <input type="text" name="label_value_{{loop.index}}" value="{{ value }}"/>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="labels_buttons">
+                <input type="button" name="add" value="Add label"/>
+                <input type="button" name="remove" value="Remove label"/>
+            </div>
+        </div>
+        <input type="submit" value="Find">
     </form>
 
     {% if results %}

@@ -118,6 +118,14 @@ ul.bottom_menu li {
     text-align: center;
 }
 
+#query_form {
+    text-align: center;
+}
+
+#query_form table {
+    text-align: left;
+}
+
 #form_type_wrapper {
     display: table;
     margin: 0 auto;

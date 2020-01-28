@@ -72,6 +72,7 @@ def queryTestRuns():
     results = None
     prevLink = None
     nextLink = None
+    labels = {}
 
     if (len(request.args) > 0) and form.validate():
         arguments = dict(request.args)
@@ -82,7 +83,15 @@ def queryTestRuns():
         arguments = processDateParam(arguments, "minTimeDate")
         arguments = processDateParam(arguments, "maxTimeDate")
         arguments = convertIntParam(arguments, "page")
-        print(arguments["state"])
+        labelNumber = 1
+        while "label_key_{}".format(labelNumber) in request.args:
+            key = request.args["label_key_{}".format(labelNumber)]
+            value = request.args["label_value_{}".format(labelNumber)]
+            labels[key] = value
+            
+            labelNumber = labelNumber + 1
+        if len(labels) > 0:
+            arguments["labels"] = labels
         
         results = junitDatabase.queryTestRuns(arguments)
         
@@ -93,7 +102,7 @@ def queryTestRuns():
             url = queryPage(request.args, results.next_num)
             nextLink = url
 
-    return render_template("query.html", form = form, results = results, prevLink = prevLink, nextLink = nextLink)
+    return render_template("query.html", form = form, labels = labels, results = results, prevLink = prevLink, nextLink = nextLink)
 
 def showNumericValue(variable):
     if variable == None:
