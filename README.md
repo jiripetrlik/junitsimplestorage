@@ -20,3 +20,8 @@ Use pip to install Junit Simple storage
 export FLASK_APP=junitsimplestorage
 flask run
 ```
+
+### Database connection
+MySQL: `SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:test@mysql/junitsimplestorage junitsimplestorage`
+
+Postgres: `SQLALCHEMY_DATABASE_URI=postgresql://postgres:test@postgres/junitsimplestorage junitsimplestorage`

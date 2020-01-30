@@ -10,7 +10,6 @@ setup(
         "Flask>=1.1.1",
         "Flask-SQLAlchemy>=2.4.1",
         "junitparser>=1.4.0",
-        "PyMySQL>=0.9.3",
         "PyYAML>=5.1.2",
         "SQLAlchemy==1.3.10",
         "swagger-ui-bundle==0.0.6",
