@@ -120,6 +120,7 @@ ul.bottom_menu li {
 
 #query_form {
     text-align: center;
+    margin-bottom: 7px;
 }
 
 #query_form table {
@@ -130,6 +131,11 @@ ul.bottom_menu li {
     display: table;
     margin: 0 auto;
     text-align: left;
+}
+
+.labels_buttons {
+    margin-top: 7px;
+    margin-bottom: 7px;
 }
 
 form ul.errors {

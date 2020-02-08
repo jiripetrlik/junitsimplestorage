@@ -88,7 +88,9 @@ $(document).ready(function(){
         var numberOfLabels = getNumberOfLabels()
         var html = `
             <div class="label_item">
-                <input type="text" name="label_key_number"/> = <input type="text" name="label_value_number"/>
+                <input type="text" name="label_key_number" placeholder="key"/>
+                =
+                <input type="text" name="label_value_number" placeholder="value"/>
             </div>
         `
         html = html.replace(/number/g, numberOfLabels + 1)
