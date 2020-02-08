@@ -1,5 +1,6 @@
 __pycache__
 JunitSimpleStorage.egg-info
+build
 dist
 .pytest_cache
 test.db
