@@ -6,7 +6,7 @@ setup(
     author="Jiri Petrlik",
     author_email="jiripetrlik@gmail.com",
     install_requires=[
-        "connexion>=2.4.0",
+        "connexion>=2.4.0,<=2.6.0",
         "Flask>=1.1.1",
         "Flask-SQLAlchemy>=2.4.1",
         "junitparser>=1.4.0",
