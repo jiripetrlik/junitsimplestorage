@@ -31,3 +31,16 @@ Postgres: `SQLALCHEMY_DATABASE_URI=postgresql://user:password@postgres/junitsimp
 ## REST API
 
 For more details see OpenAPI specification on `http://localhost:5000/api/ui`
+
+## Docker
+
+Docker image for Junit Simple Storage can be found on
+[Docker hub](https://hub.docker.com/r/jiripetrlik/junitsimplestorage).
+
+```
+Run docker container with Junit Simple Storage:
+docker run -d --name junitsimplestorage -p 8080:80 jiripetrlik/junitsimplestorage
+
+Or with connection to database:
+docker run -d --name junitsimplestorage -p 8080:80 -e SQLALCHEMY_DATABASE_URI=postgresql://user:password@postgres/junitsimplestorage jiripetrlik/junitsimplestorage
+```
