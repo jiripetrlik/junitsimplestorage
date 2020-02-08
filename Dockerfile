@@ -10,6 +10,9 @@ RUN \
  python3 /setup.py install && \
  apk --purge del .build-deps
 
+ENV SQLALCHEMY_DATABASE_URI sqlite:////data/junit-simple-storage.db
+
+VOLUME [ "/data" ]
 EXPOSE 80
 
 CMD ["uwsgi", "/uwsgi.ini"]
