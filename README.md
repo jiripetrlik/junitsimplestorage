@@ -2,9 +2,11 @@
 
 Junit Simple Storage is a database application which
 allows users to store test results. It uses relational
-databases as a backend.
+databases as backend.
 
-![screenshot](docs/screenshots/screenshot.png)
+![screenshot](docs/screenshots/screenshot-list.png)
+
+More screenshots can be found [here](docs/screenshots.md).
 
 ## Install
 
