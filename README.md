@@ -4,6 +4,8 @@ Junit Simple Storage is a database application which
 allows users to store test results. It uses relational
 databases as a backend.
 
+![screenshot](docs/screenshots/screenshot.png)
+
 ## Install
 
 Use `setup.py` in the project parent directory to install
