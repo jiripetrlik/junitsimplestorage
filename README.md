@@ -28,9 +28,9 @@ It is possible to access the running application on `http://localhost:5000`
 
 ### Examples of database connection strings
 
-MySQL: `SQLALCHEMY_DATABASE_URI=mysql+pymysql://user:password@mysql/junitsimplestorage junitsimplestorage`
+MySQL: `SQLALCHEMY_DATABASE_URI=mysql+pymysql://user:password@database-url/database-name
 
-Postgres: `SQLALCHEMY_DATABASE_URI=postgresql://user:password@postgres/junitsimplestorage junitsimplestorage`
+Postgres: `SQLALCHEMY_DATABASE_URI=postgresql://user:password@database-url/database-name
 
 ## REST API
 
@@ -46,5 +46,5 @@ Run docker container with Junit Simple Storage:
 docker run -d --name junitsimplestorage -p 8080:80 jiripetrlik/junitsimplestorage
 
 Or with connection to database:
-docker run -d --name junitsimplestorage -p 8080:80 -e SQLALCHEMY_DATABASE_URI=postgresql://user:password@postgres/junitsimplestorage jiripetrlik/junitsimplestorage
+docker run -d --name junitsimplestorage -p 8080:80 -e SQLALCHEMY_DATABASE_URI=postgresql://user:password@database-url/database-name jiripetrlik/junitsimplestorage
 ```
