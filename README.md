@@ -48,3 +48,13 @@ docker run -d --name junitsimplestorage -p 8080:80 jiripetrlik/junitsimplestorag
 Or with connection to database:
 docker run -d --name junitsimplestorage -p 8080:80 -e SQLALCHEMY_DATABASE_URI=postgresql://user:password@database-url/database-name jiripetrlik/junitsimplestorage
 ```
+
+## Tips
+
+### Import all JUnit results from Maven build using curl
+
+`find -name TEST*xml -exec curl -X POST "http://junitsimplestorage-url:5000/api/import" -H "accept: */*" -H "Content-Type: application/xml" -d "@{}" \;`
+
+or with labels (label1=value1 and label2=value2):
+
+`find -name TEST*xml -exec curl -X POST "http://junitsimplestorage-url:5000/api/import?labels=label1%3Avalue1%2Clabel2%3Avalue2" -H "accept: */*" -H "Content-Type: application/xml" -d "@{}" \;`
