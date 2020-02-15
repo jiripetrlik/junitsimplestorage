@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Numeric, String, DateTime, ForeignKey, and_, or_, func
+from sqlalchemy import create_engine, MetaData, Table, Column, Index, Integer, Numeric, String, DateTime, ForeignKey, and_, or_, func
 from sqlalchemy.orm import sessionmaker, relationship, lazyload
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
@@ -167,6 +167,11 @@ class JunitTestRun(Base):
     message = Column(String(255))
     labels = relationship("Label", back_populates = "testRuns", lazy = "joined", cascade = "all, delete, delete-orphan")
 
+    classNameNameIndex = Index("classname-name-index", classname, name)
+    nameIndex = Index("name-index", name)
+    importTimeStateIndex = Index("import-time-state-index", importTime, state)
+    importTimeNameIndex = Index("import-time-name", importTime, name)
+
     def as_dict(self):
         dictionary = {c.name: getattr(self, c.name) for c in self.__table__.columns}
         labels = {}
@@ -184,3 +189,5 @@ class Label(Base):
     value = Column(String(255), nullable=False)
 
     testRuns = relationship("JunitTestRun", back_populates = "labels")
+
+    label_index = Index("key-value-index", key, value)
