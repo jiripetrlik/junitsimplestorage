@@ -22,7 +22,7 @@ openapi-spec-validator==0.2.8
 packaging==19.2
 pluggy==0.13.0
 psycopg2-binary==2.8.4
-py==1.8.0
+py==1.10.0
 PyMySQL==0.9.3
 pyparsing==2.4.3
 pyrsistent==0.15.5
